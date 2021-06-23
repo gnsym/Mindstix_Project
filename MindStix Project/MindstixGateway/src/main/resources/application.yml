@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+eureka:
+  instance:
+    hostname: localhost
+    
+spring:
+  application:
+    name: mindstix-gateway   
+  cloud:
+    gateway:
+      routes:      
+        - id: customer-service
+          uri: lb://customer-service
+          predicates:
+            - Path=/customer/**    
+        - id: transaction-service
+          uri: lb://transaction-service
+          predicates:
+            - Path=/transaction/** 
+       
+       
+  
+       
