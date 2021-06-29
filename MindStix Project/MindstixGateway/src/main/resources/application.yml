@@ -14,12 +14,49 @@ spring:
         - id: customer-service
           uri: lb://customer-service
           predicates:
-            - Path=/customer/**    
+            - Path=/customer/**   
+          filters:
+          - name: CircuitBreaker   
+            args:
+             name: customer-service
+             fallbackUri: forward:/customer
         - id: transaction-service
           uri: lb://transaction-service
           predicates:
             - Path=/transaction/** 
+          filters:
+          - name: CircuitBreaker  
+            args:
+             name: transaction-service
+             fallbackUri: forward:/transaction-fallback
+  main:
+     allow-bean-definition-overriding: true 
+#  security:
+#      user:
+#        name: gnsym
+#        password: 123456
+#        
+#      enable:
+#        csrf: false      
+                   
+
        
        
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+           timeoutInMilliseconds: 10000
+           
+management:
+  endpoint:
+    web:
+      exposure:
+        include:
+          -hystrix.stream      
+       
+
   
        
